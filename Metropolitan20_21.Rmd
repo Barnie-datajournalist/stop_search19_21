@@ -1,0 +1,317 @@
+----
+title: "R Notebook"
+output: html_notebook
+---
+# Metropolitan stop & search
+
+We're going to repeat what we did for other forces for April 2020-March 2021 for April 2021-March 2021.
+
+I have dragged and dropped from where I've stored the downloaded data into the R-file.
+This will automatically bring into into the file area [bottom RH corner of this project]
+
+# Importing data 
+
+We need to use read.csv to import data.
+Create a code block by inserting one.
+Call the file a name you understand so metropolitanapril20  will stop & search figures for mean Metropolitan Police in April 2020.
+
+Don't forget you need an 'assignment operator' <-
+To get the filename right, go to the R file where you're storing it, copy and paste it and make sure you add .csv at the end of the name without any gaps, as below. You can also spot the pattern and change accordingly, rather than just copy and paste it from the file name. When you do a different force, you'll need to do it from the file. The second time just change what you need after copy and pasting the previous (2019-2020) force data.
+
+Run the code using the green arrow button.
+It will appear in the environment box - top RHS. Then double click on it to move into the top LHS corner.
+Repeat for all csv files. 
+
+Last time I created a new block each time. This time I'll create it all in one block.
+
+```{r}
+metropolitanapril20 <- read.csv("2020-04-metropolitan-stop-and-search.csv")
+metropolitanmay20 <- read.csv("2020-05-metropolitan-stop-and-search.csv")
+metropolitanjune20 <- read.csv("2020-06-metropolitan-stop-and-search.csv")
+metropolitanjuly20 <- read.csv("2020-07-metropolitan-stop-and-search.csv")
+metropolitanaug20 <- read.csv("2020-08-metropolitan-stop-and-search.csv")
+metropolitansept20 <- read.csv("2020-09-metropolitan-stop-and-search.csv")
+metropolitanoct20 <- read.csv("2020-10-metropolitan-stop-and-search.csv")
+metropolitannov20 <- read.csv("2020-11-metropolitan-stop-and-search.csv")
+metropolitandec20 <- read.csv("2020-12-metropolitan-stop-and-search.csv")
+metropolitanjan21 <- read.csv("2021-01-metropolitan-stop-and-search.csv")
+metropolitanfeb21 <- read.csv("2021-02-metropolitan-stop-and-search.csv")
+metropolitanmar21 <- read.csv("2021-03-metropolitan-stop-and-search.csv")
+```
+
+All the variables (files) are now in the top RH corner in the environment.
+# Seeing the columns in each file
+
+By using the name of the file and a dollar sign in a code block you will get the columns as a drop down menu e.g. metropolitanapril20$.
+You can use that to show a column e.g. metropolitanapril20$Self.defined.ethnicity will show all 30583 of the ethnicities of those stopped and searched. 
+If there were 1000s, then it will stop after 1000 (in this case) of rows you have.
+
+```{r}
+metropolitanapril20$Self.defined.ethnicity
+```
+
+# Combining all data sets
+
+We're going to put everything into one file so we have S&S figures for the Met from April 2020- March 2021.
+We will use the rbind() function to increase the rows. 
+Again you need a code block.
+Don't forget we need to store it, so we need to assign a name and use <- before we use the rbind() function.
+
+I'm calling it metropolitan20_21total because I want to show this is for 2020 and 2021 and not just 2021.
+
+```{r}
+metropolitan20_21total <- rbind(metropolitanapril20, metropolitanmay20, metropolitanjune20, metropolitanjuly20, metropolitanaug20, metropolitansept20, metropolitanoct20, metropolitannov20, metropolitandec20, metropolitanjan21, metropolitanfeb21, metropolitanmar21)
+```
+
+If you get errors, it's usually because you've copied and pasted it wrongly.
+
+# Exporting this new file as a CSV
+
+Because we're not storing anything we don't need a variable <-
+But we need a new file name which is a CSV.
+We will use write,csv() function, when creating a new code block.
+There are two elements. The name of the file where the merged data is stored, and a new CSV file name. Note the quote marks in the latter. write.csv(metropolitan20_21total, "metropolitan20_21totalstop&searchtotal.csv")
+The new merged CSV file should be in your files in the bottom RHS corner with the name metropolitan20_21totalstop&searchtotal.csv.
+This will automatically go to your R folder that you used to drag and drop the original files. What you have is all the merged data in one big spreadsheet. 
+
+```{r}
+write.csv(metropolitan20_21total, "metropolitan20_21totalstop&searchtotal.csv")
+```
+
+We could use excel - but coding makes it easier to tidy up.
+
+# Extracting data from the sheets and extract the information you want 
+
+We are extracting the columns and storing it into another file or variable.
+So, taking the ethnicity out we use the $ to get the columns i.e. metropolitan20_21total$Self.defined.ethnicity
+Again we're using one coding block.
+And this step isn't really necessary, but it helps ypu to keep track of what you are doing.
+
+```{r}
+ethnicity <- metropolitan20_21total$Self.defined.ethnicity
+outcome <- metropolitan20_21total$Outcome
+```
+
+This shows 312649 rows.
+We can tell that more S&S in pandemic year.
+
+# We're going to try to tidy up and rename the columns.
+```{r}
+#Show the column names
+colnames(metropolitan20_21total)
+```
+
+*We can change the names in the data using c() function:*
+
+We're just going to get rid of the full stops or shorten names e.g. "Self.defined.ethnicity" becomes "Ethnicity".
+
+```{r}
+#Renaming columns
+colnames(metropolitan20_21total) <- c("Type", "Date", "Policingoperation", "Partofpolicingoperation", "Latitude", "Longitude", "Gender", "Agerange", "Ethnicity", "Officerethnicity", "Legislation", "Searchobject", "Outcome", "Objectsearchoutcome", "Removalofclothing")
+```
+
+We can see the new column names so:
+
+```{r}
+colnames(metropolitan20_21total)
+```
+
+Just run the code, and they'll show up.
+**To see the changes, view the dataset again. This is always a good idea to keep track of the alterations.**
+
+You want to see the headings.
+Again run the code, and you'll see what you've done.
+
+```{r}
+head(metropolitan20_21total)
+```
+# Removing columns
+
+**Now that we have renamed them, we will remove some of these unwanted columns. Our aim is focused on revealing which ethnicities were stopped the most and the outcomes.**
+
+**The columns we are going to remove are: Policingoperationpart, Policingoperation, Partofpolicingoperation Latitude,Longitude. I'm also not sure of the utility of Removalofclothing, but I'll keep it in, just in case there is something humiliating when we look at ethnicity. **
+
+A note on *Officerethnicity* and *Objectsearchoutcome*, given the gaps in the data, it is better to not include these either.
+
+We are going to use the dplyr() function, and we're going to select the columns we want.
+
+```{r}
+library("dplyr")
+
+metropolitan20_21totalclean <- metropolitan20_21total%>% select(Type, Date, Ethnicity,Gender, Agerange, Legislation, Searchobject, Outcome, Removalofclothing)
+
+metropolitan20_21totalclean
+
+```
+
+# Cleaning the date
+
+**We have renamed columns to make them easier to read and removed unwanted columns. We are now going to run some code to clean the date.**
+
+*We are going to use tidyr() to extract what we need. Looking at the Date column, we can see the format is: yyyy-mm-dd and then followed by the time 2020-04-01T00:00:00+00:00.*
+
+**We need to install tidyr**
+
+
+
+```{r}
+#Install tidyr
+install.packages("tidyr")
+
+#Activating tidyr
+library(tidyr)
+
+```
+When you run this, you seem to get an error sign. You need to go to Packages in bottom RH corner. Update them. Then log out of R and log back in.
+# Changing the date column
+
+To avoid confusion with the we will call this newdatemetropolitan20_21
+
+```{r}
+#Convert the date column
+newdatemetropolitan20_21 <- tidyr::separate(metropolitan20_21totalclean, 2, c("Date"), sep= "T")
+
+newdatemetropolitan20_21
+
+```
+*For GitHub, I am getting rid of the outcome of running the coding. We can see if we run it.
+
+# Exporting this new file as a CSV
+
+We want to have the option of carrying this in R or excel. So, as we did before we will create a new file.
+
+```{r}
+write.csv(newdatemetropolitan20_21, "newdatemetropolitan20_21.csv")
+```
+Just make sure the new files are appearing in the bottom RH box. That means at any point you can use excel to continue your analysis.
+
+# Data analysis
+
+The idea of this story is to see the proportion of S&S in ethnicity and the outcome. We want to test whether there is a double whammy of more Black and Asian people being S&S and what the situation is in terms of outcomes. We want to be able to find out force by force and then total combined in England & Wales forces.
+
+We will also look at whether the pandemic has made a difference. So we are doing April 19 - Mar 20 and April 20 - March 21. This is for 2020-21. 
+
+The first part is to get the data in some form to analyse either in R or as an excel sheet.
+
+We will need some packages for this.
+
+```{r}
+#Install the tidyverse
+install.packages("tidyverse")
+
+#Activate tidyverse
+library(tidyverse)
+```
+
+You get a lot of red writing but no error message. This happens.
+
+# Counting 
+
+We know the number of stop and searches that took place between Apr 2019 to Mar 2020. We can compare the totals with Apr 2020-Mar 2021 - non-pandemic v pandemic year.
+
+If you get an error sign - go back to coding block with dplyr and run. That seems to fix the problem.
+
+```{r}
+#Count the type of search
+newdatemetropolitan20_21 %>%
+  count(Type, sort = TRUE)
+```
+
+It shows that 227940 people; 79360 person & vehicles; 5349 vehicle.
+This shows immediately that more people were S&S during pandemic year.
+
+*Now, let's see what the ethnic groups show us:*
+
+I know that I can create all the files I need in on coding black, but I still need to get rid of the blanks and those which are not stated. 
+
+```{r}
+#Count the ethnicities stopped and searched
+newdatemetropolitan20_21 %>%
+  count(Ethnicity, sort = TRUE)
+```
+We need to get rid of "Other ethnic group - Not stated" & no name rows. 
+
+**There are 18 ethnic groups. 71413 are "Other ethnic group - Not Stated"; 4523 are blank. These are useless because we can't do anything with them. So we need to get rid of them.**
+
+I am going to create new variables "newdatemetropolitan20_211" & "newdatemetropolitan20_212" which hopefully will take out both.
+
+```{r}
+newdatemetropolitan20_211 <- subset(newdatemetropolitan20_21, Ethnicity!="Other ethnic group - Not stated")
+newdatemetropolitan20_212 <- subset(newdatemetropolitan20_211, Ethnicity!="")
+```
+
+We're going to create an excel file for newdatehertfordshire19_202
+
+```{r}
+write.csv(newdatemetropolitan20_212, "newdatemetropolitan20_212.csv")
+```
+
+We can see if this has worked using the coding below and running it.
+
+```{r}
+print(newdatemetropolitan20_212)
+```
+
+That seems to have worked. We've got rid of the not stated.
+
+We have 236713 rows now. So that seems OK. I now have the option of excel or coding.
+Let us see what ethnicities show us now
+
+```{r}
+#Count the ethnicities stopped and searched
+newdatemetropolitan20_212 %>%
+  count(Ethnicity, sort = TRUE)
+```
+We're going to try to get outcomes of each in a table form and split them into the various outcomes
+
+```{r}
+library(dplyr) 
+data<-read.csv("newdatemetropolitan20_212.csv")
+outcomes<-unique(data$Outcome)
+outcomes
+```
+
+Now that we know the categories we can see the various outcomes.
+Remember you need the exact phrase used in the row e.g. A no further action disposal
+We're also going to assign a new variable which acts as a folder. 
+So for no further action we'll use NFA
+I'm interested in NFA, arrests, cautions, penalty notices, community resolutions & summons.
+I want to see if anything leaps out.
+I can put all of these into one coding box.
+
+```{r}
+library(dplyr) 
+data<-read.csv("newdatemetropolitan20_212.csv")
+outcomes<-unique(data$Outcome)
+outcomes
+NFAmetropolitan20_21 <-filter(data, Outcome == "A no further action disposal")
+Arrestmetropolitan20_21 <-filter(data, Outcome == "Arrest")
+Cautionmetropolitan20_21 <-filter(data, Outcome == "Caution (simple or conditional)")
+FPNmetropolitan20_21 <-filter(data, Outcome == "Penalty Notice for Disorder")
+Communitymetropolitan20_21 <-filter(data, Outcome == "Community resolution")
+Chargedmetropolitan20_21 <-filter(data, Outcome == "Summons / charged by post")
+```
+
+Similarly, we can create excel sheets in one coding block.
+
+```{r}
+write.csv(NFAmetropolitan20_21, "NFAmetropolitan20_21.csv")
+write.csv(Arrestmetropolitan20_21, "Arrestmetropolitan20_21.csv")
+write.csv(Cautionmetropolitan20_21, "Cautionmetropolitan20_21.csv")
+write.csv(FPNmetropolitan20_21, "FPNmetropolitan20_21.csv")
+write.csv(Communitymetropolitan20_21, "Communitymetropolitan20_21.csv")
+write.csv(Chargedmetropolitan20_21, "Charegedmetropolitan20_21.csv")
+```
+
+We can now use excel to create pivots and analyse.
+We can use this coding template, for other forces. 
+
+If we accidentally name files and want to get rid of them in the environment box - top RH, then run this through your coding. rm(filenameyouwanttodelete)
+
+I made a mistake early on!
+
+```{r}
+rm(newdatglos19_201)
+```
+
+
