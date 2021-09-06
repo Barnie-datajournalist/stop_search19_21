@@ -1,0 +1,108 @@
+----
+title: "R Notebook"
+output: html_notebook
+---
+# All forces 2019-20 stop & search
+
+We're now going to repeat what we did for other forces for April 2019-March 2020 and for April 2021-March 2021 to create all forces in England and Wales except for Greater Manchester Police for which the data is not available. This is for 2019-20.
+
+I have dragged and dropped from where I've stored the final analysed csv data into the R-file.
+This will automatically bring into into the file area [bottom RH corner of this project]
+
+# Importing data 
+
+We need to use read.csv to import data.
+We will create a complete code block by inserting one file name after another.
+This time we can't copy and past as quickly. We will have to go to the file and individually copy and paste and insert .csv. We need to be careful.
+
+We will call the file a name which is easy to understand.
+
+Don't forget you need an 'assignment operator' <-
+To get the filename right, go to the R file where you're storing it, copy and paste it and make sure you add .csv at the end of the name without any gaps, as below. 
+
+You can also spot the pattern and change accordingly, rather than just copy and paste it from the file name. When you do a different force, you'll need to do it from the file. The second time just change what you need after copy and pasting the previous (2019-2020) force data.
+
+Run the code using the green arrow button.
+It will appear in the environment box - top RHS. Then double click on it to move into the top LHS corner.
+Repeat for all csv files. 
+
+```{r}
+avonsomerset19_20 <- read.csv("newdateavon_somerset19_203.csv")
+beds19_20 <- read.csv("newdatebeds19_202.csv")
+btp19_20 <- read.csv("newdatebtp19_202.csv")
+camb19_20<- read.csv("newdatecamb19_202.csv")
+cheshire19_20 <- read.csv("newdatecheshire19_201.csv")
+city19_20 <- read.csv("newdatecity19_202.csv")
+cleveland19_20 <- read.csv("newdatecleveland19_202.csv")
+cumbria19_20 <- read.csv("newdatecumbria19_202.csv")
+derbys19_20 <- read.csv("newdatederbys19_202.csv")
+devon19_20 <- read.csv("newdatedevon19_202.csv")
+dorset19_20 <- read.csv("newdatedorset19_202.csv")
+durham19_20 <- read.csv("newdatedurham19_202.csv")
+dyfed19_20 <- read.csv("newdatedyfed19_202.csv")
+essex19_20 <- read.csv("newdateessex19_202.csv")
+glos19_20 <- read.csv("newdateglos19_202.csv")
+gwent19_20 <- read.csv("newdategwent19_202.csv")
+hampshire19_20 <- read.csv("newdatehampshire19_202.csv")
+hertfordshire19_20 <- read.csv("newdatehertfordshire19_202.csv")
+humberside19_20 <- read.csv("newdatehumberside19_202.csv")
+kent19_20 <- read.csv("newdatekent19_202.csv")
+lancashire19_20 <- read.csv("newdatelancashire19_202.csv")
+leics19_20 <- read.csv("newdateleics19_202.csv")
+lincolnshire19_20 <- read.csv("newdatelincolnshire19_202.csv")
+merseyside19_20 <- read.csv("newdatemerseyside19_202.csv")
+metropolitan19_20 <- read.csv("newdatemetropolitan19_202.csv")
+norfolk19_20 <- read.csv("newdatenorfolk19_202.csv")
+northamptonshire19_20 <- read.csv("newdatenorthamptonshire19_202.csv")
+northumbria19_20 <- read.csv("newdatenorthumbria19_202.csv")
+northwales19_20 <- read.csv("newdatenorthwales19_202.csv")
+northyorkshire19_20 <- read.csv("newdatenorthyorkshire19_202.csv")
+nottinghamshire19_20 <- read.csv("newdatenottinghamshire19_202.csv")
+southwales19_20 <- read.csv("newdatesouthwales19_202.csv")
+staffordshire19_20 <- read.csv("newdatestaffordshire19_202.csv")
+suffolk19_20 <- read.csv("newdatesuffolk19_202.csv")
+surrey19_20 <- read.csv("newdatesurrey19_202.csv")
+sussex19_20 <- read.csv("newdatesussex19_202.csv")
+southyorkshire19_20 <- read.csv("newdatesy19203.csv")
+thamesvalley19_20 <- read.csv("newdatethamesvalley19_202.csv")
+warwickshire19_20 <- read.csv("newdatewarwickshire19_202.csv")
+westmercia19_20 <- read.csv("newdatewestmerica19_202.csv")
+westmidlands19_20 <- read.csv("newdatewestmidlands19_202.csv")
+westyorkshire19_20 <- read.csv("newdatewestyorkshire19_202.csv")
+wiltshire19_20 <- read.csv("newdatewiltshire19_202.csv")
+```
+# Combining all data sets
+
+We're going to put everything into one file so we have S&S figures for all the forces from April 2019- March 2020.
+We will use the rbind() function to increase the rows. This increases rows of those excel sheets which have the same set up and columns.
+Again you need a code block.
+Don't forget we need to store it, so we need to assign a name and use <- before we use the rbind() function.
+
+I'm calling it allforces19_20total because I want to show this is for 2019 and 2020 and not just 2020.
+If you type just the fisrt few letters, it comes up and you just click and it automatically comes into the space.
+
+```{r}
+allforces19_20total <- rbind(avonsomerset19_20, beds19_20, btp19_20, camb19_20, cheshire19_20,city19_20, cleveland19_20, cumbria19_20, derbys19_20, devon19_20, dorset19_20, durham19_20, dyfed19_20, essex19_20, glos19_20, gwent19_20, hampshire19_20, hertfordshire19_20, humberside19_20, kent19_20, lancashire19_20, leics19_20, lincolnshire19_20, merseyside19_20, metropolitan19_20, norfolk19_20, northamptonshire19_20, northumbria19_20, northwales19_20, northyorkshire19_20, nottinghamshire19_20, southwales19_20, southyorkshire19_20, staffordshire19_20, suffolk19_20, surrey19_20, sussex19_20, thamesvalley19_20, warwickshire19_20, westmercia19_20, westmidlands19_20, westyorkshire19_20, wiltshire19_20)
+```
+
+If you get errors, it's usually because you've copied and pasted it wrongly.
+
+# Exporting this new file as a CSV
+
+Because we're not storing anything we don't need a variable <-
+But we need a new file name which is a CSV.
+We will use write,csv() function, when creating a new code block.
+There are two elements. The name of the file where the merged data is stored, and a new CSV file name. Note the quote marks in the latter. write.csv(allforces19_20total, "allforcestotalstop&searchtotal.csv")
+The new merged CSV file should be in your files in the bottom RHS corner with the name allforces19_20totalstop&searchtotal.csv.
+This will automatically go to your R folder that you used to drag and drop the original files. What you have is all the merged data in one big spreadsheet. 
+
+```{r}
+write.csv(allforces19_20total, "allforces19_20totalstop&searchtotal.csv")
+```
+
+Because we tided up as we went along, we should now be able to use excel to create pivots and analyse.
+We can use this coding template, for other forces. 
+
+It's a big document with over 458,000 rows, so it will take a long time to covernt to excel.
+The reason why I choose excel is because, from past experience, .csv doesn't save changes. 
+
